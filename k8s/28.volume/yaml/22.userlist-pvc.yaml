@@ -17,4 +17,5 @@ spec:
       app: userlist
     #matchExpressions:
     #  - {key: environment, operator: In, values: [dev]}
+  #volumeName: userlist-pv
 ---
