@@ -8,6 +8,12 @@ spec:
   - host: userlist.universal-team-245015.gcp.com
     http:
       paths:
-      - backend:
-          serviceName: userlist-svc
-          servicePort: 8181
+      #- path: /users/1
+      #  backend:
+      #    serviceName: userlist2-svc
+      #    servicePort: 80
+      - path: /
+        backend:
+          serviceName: userlist1-svc
+          servicePort: 80
+
