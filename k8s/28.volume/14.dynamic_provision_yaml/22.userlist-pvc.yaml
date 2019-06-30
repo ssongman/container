@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: userlist-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      #storage: 1Gi
+      storage: 100Mi
+  #storageClassName: slow
+  storageClassName: standard
+---
+
+#### reference storageClass
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: standard
+# parameters:
+#   type: pd-standard
+# provisioner: kubernetes.io/gce-pd
+# reclaimPolicy: Delete
+# volumeBindingMode: Immediate
+####

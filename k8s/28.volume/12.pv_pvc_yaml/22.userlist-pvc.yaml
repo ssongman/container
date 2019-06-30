@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: userlist-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      #storage: 1Gi
+      storage: 100Mi
+  ### you can choose one of below mothod which are selector and volumeName
+  #selector:
+  #  matchLabels:
+  #    app: userlist
+  volumeName: userlist-pv
+---
+
