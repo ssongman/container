@@ -1,18 +1,20 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: myclaim
+  name: userlist-pvc
 spec:
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 8Gi
-  storageClassName: slow
+      #storage: 1Gi
+      storage: 100Mi
+  #storageClassName: slow
+  storageClassName: standard
   selector:
     matchLabels:
-      release: "stable"
-    matchExpressions:
-      - {key: environment, operator: In, values: [dev]}
+      app: userlist
+    #matchExpressions:
+    #  - {key: environment, operator: In, values: [dev]}
 ---
