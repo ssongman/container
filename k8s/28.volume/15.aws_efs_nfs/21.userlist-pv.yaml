@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: userlist-pv-aws-efs
+  labels:
+    app: userlist
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    #storage: 1Gi
+    storage: 100Mi
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: standard
+  #awsElasticBlockStore:
+  #  fsType: ext4
+  #  volumeID: vol-xxxxxxxxxxxxx 
+  nfs:
+    server: fs-dec74bbf.efs.ap-northeast-2.amazonaws.com
+    path: /
+---
+
