@@ -11,5 +11,6 @@ spec:
     port: 80
     targetPort: 8181
   #type: ClusterIP        ## default
+  type: NodePort
   #type: LoadBalancer
   #loadBalancerIP: ""
