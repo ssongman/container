@@ -1,0 +1,24 @@
+apiVersion: "authentication.istio.io/v1alpha1"
+kind: "Policy"
+metadata:
+  name: "redis-policy"
+spec:
+  targets:
+  - name: redis-svc            # service
+  peers:
+  - mtls:
+      mode: PERMISSIVE   # accept both mutual TLS and plain text traffic
+      # mode: STRICT     # lock down to only mutual TLS
+---
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "DestinationRule"
+metadata:
+  name: "redis-dr"
+spec:
+  host: "redis-svc"
+  #host: "redis-svc.dev-istio.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+      #mode: DISABLE
+

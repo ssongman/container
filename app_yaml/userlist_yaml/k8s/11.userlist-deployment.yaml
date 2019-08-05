@@ -1,4 +1,5 @@
 apiVersion: apps/v1
+#apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: userlist
@@ -16,6 +17,17 @@ spec:
       #annotations:
       #  sidecar.istio.io/inject: "true"
     spec:
+      affinity:
+        podAntiAffinity:
+        #podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - userlist
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: userlist
         image: docker.io/ssongman/userlist:v1

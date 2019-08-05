@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: external-svc-redis
+spec:
+  hosts:
+  - reids-test.com
+  addresses:
+  - 192.168.0.139
+  location: MESH_INTERNAL
+  #location: MESH_EXTERNAL  # Istio’s mTLS authentication is disabled, and policy enforcement is performed on the client-side as opposed to server-side.
+  ports:
+  - number: 6379
+    name: redis-port
+    protocol: TCP
+  resolution: STATIC
+  endpoints:
+  - address: 10.128.0.8
+

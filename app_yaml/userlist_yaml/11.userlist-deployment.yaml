@@ -22,7 +22,7 @@ spec:
         #kubernetes.io/hostname: ktis-node04.container.ipc.kt.com
       containers:
       - name: userlist
-        image: ktis-bastion01.container.ipc.kt.com:5000/ssongman/userlist:v1
+        image: ssongman/userlist:v1
         ports:
         - containerPort: 8181
         #readinessProbe:

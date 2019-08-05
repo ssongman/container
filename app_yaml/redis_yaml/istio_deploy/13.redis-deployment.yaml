@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cli
+  labels:
+    app: redis-cli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-cli
+  template:
+    metadata:
+      labels:
+        app: redis-cli
+      #annotations:
+        #sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: redis-cli
+        image: redis
+        ports:
+        - containerPort: 6379

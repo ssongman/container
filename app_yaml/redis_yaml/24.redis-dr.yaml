@@ -1,0 +1,10 @@
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "DestinationRule"
+metadata:
+  name: "redis2"
+spec:
+  #host: "redis-svc2"
+  host: "redis-svc2.dev-istio.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: DISABLE
