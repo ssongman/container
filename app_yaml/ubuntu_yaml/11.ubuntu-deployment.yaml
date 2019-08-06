@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu
+  labels:
+    app: ubuntu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+      #annotations:
+        #sidecar.istio.io/inject: "true"
+    spec:
+      #nodeSelector:
+        #node-role.kubernetes.io/infra: "true"
+        #node-role.kubernetes.io/node: "true"
+      containers:
+      - name: ubuntu
+        image: ubuntu:18.04
+        args:
+        - sleep
+        - '3600'
+        #readinessProbe:
+        #  httpGet:
+        #    path: /
+        #    port: 8181
+        #  #initialDelaySeconds: 5
+        #  periodSeconds: 1
+        #resources:
+        #  limits:
+        #    cpu: '2'
+        #    memory: 1250Mi

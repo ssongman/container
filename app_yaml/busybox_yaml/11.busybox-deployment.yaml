@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox
+  labels:
+    app: busybox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+      #annotations:
+        #sidecar.istio.io/inject: "true"
+    spec:
+      #nodeSelector:
+        #node-role.kubernetes.io/infra: "true"
+        #node-role.kubernetes.io/node: "true"
+      containers:
+      - name: busybox
+        image: busybox
+        args:
+        - sleep
+        - '3600'
+        #readinessProbe:
+        #  httpGet:
+        #    path: /
+        #    port: 8181
+        #  #initialDelaySeconds: 5
+        #  periodSeconds: 1
+        #resources:
+        #  limits:
+        #    cpu: '2'
+        #    memory: 1250Mi
