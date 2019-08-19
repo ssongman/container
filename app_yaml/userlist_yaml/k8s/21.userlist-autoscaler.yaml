@@ -11,9 +11,10 @@ spec:
     name: "userlist"
     apiVersion: "apps/v1beta1"
   minReplicas: 1
-  maxReplicas: 5
+  maxReplicas: 3
   metrics:
   - type: "Resource"
     resource:
       name: "cpu"
-      targetAverageUtilization: 80
+      targetAverageUtilization: 50
+  #targetCPUUtilizationPercentage: 50
