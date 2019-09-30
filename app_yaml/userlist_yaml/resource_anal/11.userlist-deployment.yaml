@@ -17,6 +17,17 @@ spec:
       #annotations:
       #  sidecar.istio.io/inject: "true"
     spec:
+      affinity:
+        podAntiAffinity:
+        #podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - userlist
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: userlist
         image: docker.io/ssongman/userlist:v1
@@ -28,4 +39,11 @@ spec:
         #    port: 8181
         #  #initialDelaySeconds: 5
         #  periodSeconds: 1
+        resources:
+          limits:
+            cpu: 0.5
+            memory: 200Mi
+          requests:
+            cpu: 0.1
+            memory: 100Mi
 
