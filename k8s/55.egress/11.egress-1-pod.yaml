@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: egress-1
+  labels:
+    app: egress-1
+    name: egress-1
+  annotations:
+    pod.network.openshift.io/assign-macvlan: "true"
+spec:
+  containers:
+  - name: egress-router
+    #image: openshift3mirror/ose-egress-router:v3.10.170
+    image: haproxy
+    securityContext:
+      privileged: true
+    volumeMounts:
+      - mountPath: /usr/local/etc/haproxy
+        name: haproxy-cfg
+  #nodeSelector:
+  #  region: node
+  nodeName: okd-node01.192-168-0-216.nip.io
+  volumes:
+    - configMap:
+        defaultMode: 420
+        name: egress-1-cm
+      name: haproxy-cfg

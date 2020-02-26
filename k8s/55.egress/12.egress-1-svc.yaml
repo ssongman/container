@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: egress-1
+spec:
+  ports:
+  - name: http
+    port: 80
+  - name: https
+    port: 443
+  - name: cubrid
+    port: 33000
+  - name: maria
+    port: 3306
+  type: ClusterIP
+  selector:
+    name: egress-1
