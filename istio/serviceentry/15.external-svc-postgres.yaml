@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: external-svc-postgres
+spec:
+  hosts:
+  - okd-node04.192-168-0-229.nip.io
+  addresses:
+  - 192.168.0.229/32
+  endpoints:
+  - address: 192.168.0.229
+  ports:
+  - number: 5432
+    name: tcp
+    protocol: TCP
+  location: MESH_INTERNAL
+  resolution: STATIC
