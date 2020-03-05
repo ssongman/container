@@ -13,11 +13,17 @@ spec:
     metadata:
       labels:
         app: postgres
-      #annotations:
+      annotations:
         #sidecar.istio.io/inject: "true"
+        sidecar.istio.io/inject: "false"
     spec:
       containers:
       - name: postgres
         image: postgres
         ports:
         - containerPort: 5432
+        env:
+        - name: POSTGRES_HOST_AUTH_METHOD
+          value: trust
+              
+              
