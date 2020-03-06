@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: external-svc-mysql
+spec:
+  addresses:
+    - 192.168.0.229/24
+  hosts:
+    - external.svc.mysql
+  ports:
+    - name: mysqldb
+      number: 3307
+      protocol: TCP
