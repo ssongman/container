@@ -322,6 +322,8 @@ invalid length of startup packet  로 반응함.
 
 
 
+
+
 ### 3) 시나리오 3번
 
 istio - DB (serviceEntry) 연결
@@ -613,12 +615,62 @@ oc -n song delete serviceentry external-svc-postgres
 
 ## 2.4 테스트 결론
 
-- outboundTrafficPolicy mode 가 Allow_any 로 되어 있으면 ServieEntry 가 없어도 외부 트래픽을 허용해야 하지만 이상하게도 Postgresql DB 의 경우 serviceEntry 가 반드시 필요함.
-- 실패시 postgres 의 로그가 invalid length of startup packet  로 반응하는 것으로 보아 DB 까지의 통신이 되는것으로 판단됨.
-- tcpdump 로 분석결과 실패시에는 length 가 239 로 표기됨. (정상일경우는 8)
-- 해당 메세지를 이용해 google 찾아보니 postgres bug 로 이야기 되고 있음.
-  - https://github.com/pgbouncer/pgbouncer/issues/31
-- postgresql 의 bug 로 추정됨.(향후 업데이트 필요)
+- outboundTrafficPolicy mode 가 Allow_any 로 되어 있으면 ServieEntry 가 없어도 외부 트래픽을 허용해야 하지만 Postgresql DB 의 경우 serviceEntry 가 있어야지만 정상 통신이 됨.
+
+- 실패 상태의 tcpdump detail 로 로그 분석 결과
+
+  tcpdump -i any -XX  port 5433 and host 192.168.0.216
+
+```
+16:57:35.540929 IP 192.168.0.228.42640 > okd-node04.192-168-0-229.nip.io.postgres: Flags [P.], seq 1:241, ack 1, win 221, options [nop,nop,TS val 2738129338 ecr 2738137469], length 240
+        0x0000:  0000 0001 0006 0800 2798 4b23 0000 0800  ........'.K#....
+        0x0010:  4500 0124 ca45 4000 3f06 ed74 c0a8 00e4  E..$.E@.?..t....
+        0x0020:  c0a8 00e5 a690 1538 7cbc 43fa 5419 8d5b  .......8|.C.T..[
+        0x0030:  8018 00dd 30ef 0000 0101 080a a334 89ba  ....0........4..
+        0x0040:  a334 a97d 1603 0100 eb01 0000 e703 0377  .4.}...........w
+        0x0050:  64ec f8e1 f2f8 3df5 5eec 4726 5a9a 4726  d.....=.^.G&Z.G&
+        0x0060:  05e1 ce4f ccdb 88d9 cb40 5660 5058 b900  ...O.....@V`PX..
+        0x0070:  001c c02b cca9 c02f cca8 c009 c013 009c  ...+.../........
+        0x0080:  002f c02c c030 c00a c014 009d 0035 0100  ./.,.0.......5..
+        0x0090:  00a2 0000 005d 005b 0000 586f 7574 626f  .....].[..Xoutbo
+        0x00a0:  756e 645f 2e35 3433 325f 2e5f 2e70 7974  und_.5432_._.pyt
+        0x00b0:  686f 6e2d 7465 7374 362d 706f 7374 6772  hon-test6-postgr
+        0x00c0:  6573 716c 2d61 7273 656e 616c 2d68 6561  esql-arsenal-hea
+        0x00d0:  646c 6573 732e 7079 7468 6f6e 7465 7374  dless.pythontest
+        0x00e0:  322e 7376 632e 636c 7573 7465 722e 6c6f  2.svc.cluster.lo
+        0x00f0:  6361 6c00 1700 00ff 0100 0100 000a 0006  cal.............
+        0x0100:  0004 001d 0017 000b 0002 0100 0023 0000  .............#..
+        0x0110:  0010 0008 0006 0569 7374 696f 000d 0014  .......istio....
+        0x0120:  0012 0403 0804 0401 0503 0805 0501 0806  ................
+        0x0130:  0601 0201 0000 0000 0000 0000 0000 0000  ................
+        0x0140:  0000 0000                                ....
+
+위 내용을 분석해 보면 아래와 같다.
+.....].[..Xoutbound_.5432_._.python-test6-postgresql-arsenal-headless.pythontest2.svc.cluster.local
+
+```
+
+위 내용처럼 본 서비스와 전혀 무관한 python-test6-postgresql-arsenal-headless.pythontest2.svc.cluster.local 의 주소가 찍혔다.  pythontest2 namespace 에 존재하는 postgresql 서버를 가르키고 있는데 아마도 5432 port 를 이용해서 서비스를 찾은것 같다.
+
+확실치는 않지만 아래와 같이 가설을 세워본다.
+
+istio 에서 외부통신 시도시 serviceEntry 가 없을때 istio 내부통신으로 간주하고 내부에서 목적지 Service 를 찾음.
+
+실제로 외부 DB 서버의 port를 5432 가 아닌 5433 으로 실행 후 connect 시도하니  잘 수행됨.
+
+이 가설이 맞다면 istio bug 로 보임.
+
+
+
+### 최종결론
+
+- istio pod 에서 outbound traffic 이 있을때는 서비스를 제대로 찾지 못하는 bug 존재함.
+
+- 해결책은 serviceEntry 를 등록해 줘야 한다.
+
+
+
+
 
 
 
@@ -1058,7 +1110,7 @@ oc -n song delete serviceentry external-svc-mysql
 
 - outboundTrafficPolicy mode 가 Allow_any 로 되어 있으면 ServieEntry 가 없어도 외부 트래픽을 허용함.
 - 역시 mysql DB 도 ServiceEntry 없이도 잘 됨.
-- 기타 특별한 이슈 없음
+- 만약 동일한 port 를 사용하는 mysql 서버가 클러스터 내에 존재한다면 동일한 오류를 일으킬 가능성 존재할 것으로 추정됨.
 
 
 
