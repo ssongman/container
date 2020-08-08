@@ -8,6 +8,9 @@ kind: Service
 metadata:
   name: ingress-service
   namespace: ingress-space
+  labels:
+    app.kubernetes.io/name: ingress-service
+    app.kubernetes.io/part-of: ingress-service
 spec:
   ports:
   - name: http
@@ -21,7 +24,8 @@ spec:
   selector:
     name: nginx-ingress
   sessionAffinity: None
-  type: NodePort
+  #type: NodePort
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
