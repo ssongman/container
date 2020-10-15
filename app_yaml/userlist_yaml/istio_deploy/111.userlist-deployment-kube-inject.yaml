@@ -76,7 +76,8 @@ spec:
         - name: ISTIO_METAJSON_LABELS
           value: |
             {"app":"userlist"}
-        image: ktis-bastion01.container.ipc.kt.com:5000/openshift-istio-tech-preview/proxyv2:0.5.0
+        #image: ktis-bastion01.container.ipc.kt.com:5000/openshift-istio-tech-preview/proxyv2:0.5.0
+        image: docker.io/istio/proxyv2:1.1.17
         imagePullPolicy: IfNotPresent
         name: istio-proxy
         ports:
@@ -112,7 +113,8 @@ spec:
         - "8181"
         - -d
         - ""
-        image: ktis-bastion01.container.ipc.kt.com:5000/openshift-istio-tech-preview/proxy-init:0.5.0
+        #image: ktis-bastion01.container.ipc.kt.com:5000/openshift-istio-tech-preview/proxy-init:0.5.0
+        image: docker.io/istio/proxy_init:1.1.17
         imagePullPolicy: IfNotPresent
         name: istio-init
         resources: {}

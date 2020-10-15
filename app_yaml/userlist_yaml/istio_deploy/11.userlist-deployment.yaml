@@ -13,8 +13,8 @@ spec:
     metadata:
       labels:
         app: userlist
-      annotations:
-        sidecar.istio.io/inject: "true"
+      #annotations:
+      #  sidecar.istio.io/inject: "true"
     spec:
       containers:
       - name: userlist

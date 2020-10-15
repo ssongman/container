@@ -16,7 +16,8 @@ metadata:
   name: userlist-route
   # namespace: istio-system
 spec:
-  host: userlist.ipc.kt.com
+  #host: userlist.ipc.kt.com
+  host: userlist-song.ktdscoe.myds.me
   port:
     targetPort: http2
   to:
@@ -26,11 +27,3 @@ spec:
     #name: userlist-svc
     #weight: 100
   wildcardPolicy: None
-status:
-  ingress:
-    - conditions:
-        - status: 'True'
-          type: Admitted
-      host: userlist.ipc.kt.com
-      routerName: router
-      wildcardPolicy: None

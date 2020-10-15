@@ -13,7 +13,8 @@ spec:
       protocol: HTTP
     hosts:
     #- "*"
-    - "userlist.ipc.kt.com"
+    #- "userlist.ipc.kt.com"
+    - "userlist-song.ktdscoe.myds.me"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -22,7 +23,8 @@ metadata:
 spec:
   hosts:
   #- "*"
-  - "userlist.ipc.kt.com"
+  #- "userlist.ipc.kt.com"
+  - "userlist-song.ktdscoe.myds.me"
   gateways:
   - userlist-gateway
   http:
