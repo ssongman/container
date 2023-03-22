@@ -14,18 +14,14 @@
 ## 방안1 - Kafka 활용
 Pod 마다 다른 Consumer Group 으로 동일 메시지를 Consum 하는 방안이다.
 
-## 방안2 - Redis Pub/Sub
-
 ## 방안2 - K8S API 활용
 k8s API 를 활용하여 POD 들의 endpoint를 알아내어 직접 메세지를 전송한다.
 > Cluster 내에서만 통신 가능
-
 
 참고 
 ```sh
 $ kubectl get endpoints service-name -o yaml
 ```
-
 
 ## 방안3 - headless service 활용
 headless service 를 이용하여 POD들의 IP 를 취득한후 메세지 전송한다.
