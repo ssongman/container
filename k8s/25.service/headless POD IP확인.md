@@ -89,7 +89,11 @@ Address: 10.129.6.207
 
 ## 3) java Sample
 
-* 도메인주소를 이용하여 IP 알아내기(java InetAddress 활용)
+### 도메인주소를 이용하여 IP 알아내는 방법
+java InetAddress getAllByName() 함수로 IP 목록을 알아 낼수 있다.
+
+
+### 참조 링크
 
 https://ery221.tistory.com/4
 
