@@ -91,7 +91,7 @@ Address: 10.129.6.207
 
 ### 도메인주소를 이용하여 IP 알아내는 방법
 java InetAddress getAllByName() 함수로 IP 목록을 알아 낼수 있다.
-단, 동일 Cluster 내에서만 접근이 가능한다.
+단, 동일 Cluster 내에서만 접근이 가능하다.
 
 
 ### 샘플1
