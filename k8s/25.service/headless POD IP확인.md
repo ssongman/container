@@ -94,11 +94,81 @@ java InetAddress getAllByName() 함수로 IP 목록을 알아 낼수 있다.
 단, 동일 Cluster 내에서만 접근이 가능한다.
 
 
-### 참조 링크
+### 샘플1
 
-https://ery221.tistory.com/4
+참조링크: https://ery221.tistory.com/4
 
-https://needneo.tistory.com/205
+```java
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Scanner; 
+
+public class NSLookup {
+     public static void main(String args[]) {
+
+           Scanner scan = new Scanner(System.in);
+           InetAddress inetaddr[] = null;
+           System.out.print("주소를 입력하시오 : ");
+           String str = scan.nextLine();
+           try {
+                inetaddr = InetAddress.getAllByName(str);
+           } catch (UnknownHostException e) {
+                e.printStackTrace();
+           } 
+
+           for (int i = 0; i < inetaddr.length; i++) {
+                System.out.println("getHostName = " + inetaddr[i].getHostName());
+                System.out.println("getHostAddress = " + inetaddr[i].getHostAddress());
+                System.out.println("toString = " + inetaddr[i].toString());
+                System.out.println("--------------------------");
+           }
+     }
+
+}
+```
+
+실행결과
+```
+주소를 입력하시오 : www.kpu.ac.kr
+getHostName = www.kpu.ac.kr
+getHostAddress = 210.93.48.95
+toString = www.kpu.ac.kr/210.93.48.95
+--------------------------
+```
+
+
+
+
+### 샘플2
+
+참조링크: https://needneo.tistory.com/205
+
+
+```java
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+public class Main {
+
+    public static void main(String args[]) throws UnknownHostException {
+        InetAddress ipAddress = InetAddress.getByName("www.coupang.com");
+
+        System.out.println("현재 아이피 : " + ipAddress.getHostAddress());
+        System.out.println("현재 호스트명 : " + ipAddress.getHostName());
+    }
+}
+```
+
+
+실행결과
+```
+현재 아이피 : 23.201.37.176
+현재 호스트명 : www.coupang.com
+```
+
+
+
+
 
 
 
