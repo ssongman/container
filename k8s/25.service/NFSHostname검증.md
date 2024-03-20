@@ -91,18 +91,90 @@ spec:
   type: ClusterIP
   clusterIP: None
   ports:
-  - name: nfs
+  - name: nlockmgr
+    port: 4045
+    protocol: TCP
+    targetPort: 4045
+    
+  - name: mountd
+    port: 4046
+    protocol: TCP
+    targetPort: 4046
+    
+  - name: status
+    port: 4047
+    protocol: TCP
+    targetPort: 4047
+    
+  - name: pcnfsd
+    port: 4048
+    protocol: TCP
+    targetPort: 4048
+    
+  - name: rquotad
+    port: 4049
+    protocol: TCP
+    targetPort: 4049
+    
+  - name: nfsd
     port: 2049
     protocol: TCP
     targetPort: 2049
-  - name: mountd
+    
+  - name: portmap
+    port: 111
+    protocol: TCP
+    targetPort: 111    
+    
+  - name: mountd2
     port: 20048
     protocol: TCP
     targetPort: 20048
-  - name: rpcbind
+    
+    
+    
+    
+    
+  - name: nlockmgr-udp
+    port: 4045
+    protocol: UDP
+    targetPort: 4045
+    
+  - name: mountd-udp
+    port: 4046
+    protocol: UDP
+    targetPort: 4046
+    
+  - name: status-udp
+    port: 4047
+    protocol: UDP
+    targetPort: 4047
+    
+  - name: pcnfsd-udp
+    port: 4048
+    protocol: UDP
+    targetPort: 4048
+    
+  - name: rquotad-udp
+    port: 4049
+    protocol: UDP
+    targetPort: 4049
+    
+  - name: nfsd-udp
+    port: 2049
+    protocol: UDP
+    targetPort: 2049
+    
+  - name: portmap-udp
     port: 111
-    protocol: TCP
-    targetPort: 111
+    protocol: UDP
+    targetPort: 111    
+    
+  - name: mountd2-udp
+    port: 20048
+    protocol: UDP
+    targetPort: 20048
+    
 ---
 apiVersion: v1
 kind: Endpoints
@@ -115,15 +187,74 @@ subsets:
 - addresses:
   - ip: 10.217.139.23
   ports:
-  - name: nfs
+  
+  - name: nlockmgr
+    port: 4045
+    protocol: TCP
+    
+  - name: mountd
+    port: 4046
+    protocol: TCP
+    
+  - name: status
+    port: 4047
+    protocol: TCP
+    
+  - name: pcnfsd
+    port: 4048
+    protocol: TCP
+    
+  - name: rquotad
+    port: 4049
+    protocol: TCP
+    
+  - name: nfsd
     port: 2049
     protocol: TCP
-  - name: mountd
-    port: 20048
-    protocol: TCP
-  - name: rpcbind
+    
+  - name: portmap
     port: 111
     protocol: TCP
+    
+  - name: mountd2
+    port: 20048
+    protocol: TCP
+    
+    
+    
+    
+  - name: nlockmgr-udp
+    port: 4045
+    protocol: UDP
+    
+  - name: mountd-udp
+    port: 4046
+    protocol: UDP
+    
+  - name: status-udp
+    port: 4047
+    protocol: UDP
+    
+  - name: pcnfsd-udp
+    port: 4048
+    protocol: UDP
+    
+  - name: rquotad-udp
+    port: 4049
+    protocol: UDP
+    
+  - name: nfsd-udp
+    port: 2049
+    protocol: UDP
+    
+  - name: portmap-udp
+    port: 111
+    protocol: UDP
+    
+  - name: mountd2-udp
+    port: 20048
+    protocol: UDP
+    
 ---
 
 
@@ -135,49 +266,6 @@ $ kubectl -n sa-test delete -f 10.sa-song-nfs-svc.yaml
 
 
 ```
-
-
-
-
-
-
-
-### (2) externalName
-
-```sh
-
-$ cd ~/song/del/sa-song-nfs-test
-
-$ cat > 10.sa-song-nfs-svc.yaml
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: sa-song-nfs-test
-  name: songpvtest
-  namespace: sa-test
-spec:
-  type: ExternalName
-  #externalName: my.database.example.com
-  externalName: 10.217.139.23
----
-  
-  
-
-$ kubectl -n sa-test apply -f 10.sa-song-nfs-svc.yaml
-
-# 삭제시...
-$ kubectl -n sa-test delete -f 10.sa-song-nfs-svc.yaml
-
-
-```
-
-
-
-
-
-
 
 
 
@@ -191,9 +279,75 @@ $ kubectl -n sa-test delete -f 10.sa-song-nfs-svc.yaml
 
 ```sh
 
+$ nc -zv 10.217.139.23 2049
+
+$ nc -zv songpvtest.sa-test.svc.cluster.local 4045
 $ nc -zv songpvtest.sa-test.svc.cluster.local 2049
 $ nc -zv songpvtest.sa-test.svc.cluster.local 20048
 $ nc -zv songpvtest.sa-test.svc.cluster.local 111
+
+```
+
+
+
+
+
+
+
+
+
+
+
+### (2) externalName
+
+```sh
+
+$ cd ~/song/del/sa-song-nfs-test
+
+$ cat > 12.sa-song-nfs-svc-external.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sa-song-nfs-test2
+  name: songpvtest2
+  namespace: sa-test
+spec:
+  type: ExternalName
+  externalName: nfspv.10.217.139.23.nip.io
+---
+  
+  
+  
+spec:
+  type: ExternalName
+  externalName: nfspv.10.217.139.23.nip.io
+  externalName: google.com
+  #externalName: my.database.example.com
+  externalName: songpvtest.sa-test.svc.cluster.local
+  ---
+  
+
+$ kubectl -n sa-test apply -f 12.sa-song-nfs-svc-external.yaml
+
+# 삭제시...
+$ kubectl -n sa-test delete -f 12.sa-song-nfs-svc-external.yaml
+
+
+```
+
+
+
+
+
+
+
+### 확인
+
+```sh
+
+$ ping songpvtest2
 
 ```
 
@@ -208,7 +362,7 @@ $ nc -zv songpvtest.sa-test.svc.cluster.local 111
 ```sh
 $ cd ~/song/del/sa-song-nfs-test
 
-$ cat > 11.sa-song-nfs-test.yaml
+$ cat > 15.sa-song-nfs-test.yaml
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -251,10 +405,10 @@ spec:
 ---
 
 
-$ kubectl -n sa-test apply -f 11.sa-song-nfs-test.yaml
+$ kubectl -n sa-test apply -f 15.sa-song-nfs-test.yaml
 
 # 삭제시...
-$ kubectl -n sa-test delete -f 11.sa-song-nfs-test.yaml
+$ kubectl -n sa-test delete -f 15.sa-song-nfs-test.yaml
 
 ```
 
